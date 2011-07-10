@@ -1,0 +1,45 @@
+<%= form_for(@address) do |f| %>
+  <% if @address.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@address.errors.count, "error") %> prohibited this address from being saved:</h2>
+
+      <ul>
+      <% @address.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :network_address %><br />
+    <%= f.text_field :network_address %>
+  </div>
+  <div class="field">
+    <%= f.label :mask_length %><br />
+    <%= f.text_field :mask_length %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br />
+    <%= f.text_field :description %>
+  </div>
+  <div class="field">
+    <%= f.label :address_type %><br />
+    <%= f.text_field :address_type %>
+  </div>
+  <div class="field">
+    <%= f.label :subnet_id %><br />
+    <%= f.text_field :subnet_id %>
+  </div>
+  <div class="field">
+    <%= f.label :interface %><br />
+    <%= f.text_field :interface %>
+  </div>
+  <div class="field">
+    <%= f.label :system %><br />
+    <%= f.text_field :system %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

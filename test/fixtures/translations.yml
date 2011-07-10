@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  address_id: 1
+  source_port: 1
+  destination_address: MyString
+  destination_port: 1
+
+two:
+  address_id: 1
+  source_port: 1
+  destination_address: MyString
+  destination_port: 1

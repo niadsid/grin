@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Network address:</b>
+  <%= @address.network_address %>
+</p>
+
+<p>
+  <b>Mask length:</b>
+  <%= @address.mask_length %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @address.description %>
+</p>
+
+<p>
+  <b>Address type:</b>
+  <%= @address.address_type %>
+</p>
+
+<p>
+  <b>Subnet:</b>
+  <%= @address.subnet_id %>
+</p>
+
+<p>
+  <b>Interface:</b>
+  <%= @address.interface %>
+</p>
+
+<p>
+  <b>System:</b>
+  <%= @address.system %>
+</p>
+
+
+<%= link_to 'Edit', edit_address_path(@address) %> |
+<%= link_to 'Back', addresses_path %>

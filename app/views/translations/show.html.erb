@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Address:</b>
+  <%= @translation.address_id %>
+</p>
+
+<p>
+  <b>Source port:</b>
+  <%= @translation.source_port %>
+</p>
+
+<p>
+  <b>Destination address:</b>
+  <%= @translation.destination_address %>
+</p>
+
+<p>
+  <b>Destination port:</b>
+  <%= @translation.destination_port %>
+</p>
+
+
+<%= link_to 'Edit', edit_translation_path(@translation) %> |
+<%= link_to 'Back', translations_path %>

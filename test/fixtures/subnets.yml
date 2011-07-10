@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  subnet_name: MyString
+  subnet_identifier: MyString
+  mask_length: MyString
+  default_router: MyString
+  description: MyString
+  site_id: 1
+
+two:
+  subnet_name: MyString
+  subnet_identifier: MyString
+  mask_length: MyString
+  default_router: MyString
+  description: MyString
+  site_id: 1

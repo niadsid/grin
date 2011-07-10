@@ -1,0 +1,33 @@
+<h1>Listing subnets</h1>
+
+<table>
+  <tr>
+    <th>Subnet name</th>
+    <th>Subnet identifier</th>
+    <th>Mask length</th>
+    <th>Default router</th>
+    <th>Description</th>
+    <th>Site</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @subnets.each do |subnet| %>
+  <tr>
+    <td><%= subnet.subnet_name %></td>
+    <td><%= subnet.subnet_identifier %></td>
+    <td><%= subnet.mask_length %></td>
+    <td><%= subnet.default_router %></td>
+    <td><%= subnet.description %></td>
+    <td><%= subnet.site_id %></td>
+    <td><%= link_to 'Show', subnet %></td>
+    <td><%= link_to 'Edit', edit_subnet_path(subnet) %></td>
+    <td><%= link_to 'Destroy', subnet, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Subnet', new_subnet_path %>

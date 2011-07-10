@@ -1,0 +1,35 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Subnet name:</b>
+  <%= @subnet.subnet_name %>
+</p>
+
+<p>
+  <b>Subnet identifier:</b>
+  <%= @subnet.subnet_identifier %>
+</p>
+
+<p>
+  <b>Mask length:</b>
+  <%= @subnet.mask_length %>
+</p>
+
+<p>
+  <b>Default router:</b>
+  <%= @subnet.default_router %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%= @subnet.description %>
+</p>
+
+<p>
+  <b>Site:</b>
+  <%= @subnet.site_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_subnet_path(@subnet) %> |
+<%= link_to 'Back', subnets_path %>
