@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110710001040) do
+ActiveRecord::Schema.define(:version => 20110711210924) do
 
   create_table "addresses", :force => true do |t|
     t.string   "network_address"
@@ -22,12 +22,14 @@ ActiveRecord::Schema.define(:version => 20110710001040) do
     t.string   "system"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "url"
   end
 
   create_table "networks", :force => true do |t|
     t.string   "network_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "tree_id"
   end
 
   create_table "sites", :force => true do |t|
@@ -35,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20110710001040) do
     t.integer  "network_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "tree_id"
   end
 
   create_table "subnets", :force => true do |t|
@@ -46,6 +49,7 @@ ActiveRecord::Schema.define(:version => 20110710001040) do
     t.integer  "site_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "tree_id"
   end
 
   create_table "translations", :force => true do |t|

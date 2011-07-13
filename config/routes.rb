@@ -7,10 +7,20 @@ Grin::Application.routes.draw do
   match 'addresses/view_by_site', :to => 'addresses#view_by_site'
   match 'addresses/view_by_subnet', :to => 'addresses#view_by_subnet'
   match 'addresses/tree', :to => 'addresses#tree'
+  match 'addresses/dbaction_tree', :to => 'addresses#dbaction_tree'
   match 'addresses/dbaction_all', :to => 'addresses#dbaction_all'
   match 'addresses/dbaction_network', :to => 'addresses#dbaction_network'
   match 'addresses/dbaction_site', :to => 'addresses#dbaction_site'
   match 'addresses/dbaction_subnet', :to => 'addresses#dbaction_subnet'
+  
+  match 'subnets/view_all', :to => 'subnets#view_all'
+  match 'subnets/view_by_network', :to => 'subnets#view_by_network'
+  match 'subnets/view_by_site', :to => 'subnets#view_by_site'
+  match 'subnets/view_by_subnet', :to => 'subnets#view_by_subnet'
+  match 'subnets/dbaction_all', :to => 'subnets#dbaction_all'
+  match 'subnets/dbaction_network', :to => 'subnets#dbaction_network'
+  match 'subnets/dbaction_site', :to => 'subnets#dbaction_site'
+  match 'subnets/dbaction_subnet', :to => 'subnets#dbaction_subnet'
 
   resources :translations
 

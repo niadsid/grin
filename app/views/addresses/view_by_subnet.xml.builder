@@ -6,6 +6,7 @@ xml.tag!("rows") do
 			xml.tag!("cell", address.network_address)
             xml.tag!("cell", address.mask_length)
 			xml.tag!("cell", address.system)
+			xml.tag!("cell", address.url)
             xml.tag!("cell", address.description)
         end
     end

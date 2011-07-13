@@ -5,7 +5,7 @@ body{
 	background-color: #dbe5f1;
 }
 
-table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxWindowMainContent {
+244061le.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxWindowMainContent {
 	border: #365f91 1px solid;
 }
 
@@ -907,10 +907,12 @@ div.dhtmlxMenu_SubLevelArea_Item_HotKey {
 .dhx_toolbar_base_dhx_skyblue div.dhx_toolbar_btn div {
 	font-family: arial;
 	font-size: 12px;
-	color: #244061;
 	font-weight: normal;
 	font-style: normal;
 }
+
+/* my addition */
+.dhx_toolbar_base_dhx_skyblue div.dhx_toolbar_btn.dis {color: #999999 !important}
 
 .dhx_toolbar_base_dhx_skyblue div.dhx_toolbar_btn .inp {
 	font-family: arial;
