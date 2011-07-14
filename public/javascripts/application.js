@@ -1,3 +1,17 @@
+// Issue list:
+//	 deleting subnets when in the treeview that subnet is selected (when sites is selected it works ok)
+//   creating new subnets and addresses sucks because of tab order!
+//	 new input controls have resize tabs when they should not
+//	 need to be able to save the row without going to the next row
+//   spacing is too tight in tree, descenders are clipping
+//   grid items are not sorted on load
+//   for heading 2, sort direction controls don't appear consistently and are sometimes clipped
+//   it would be nice to not have to reload from database when changing between view levels in the tree
+//   in address view the graphic is screwed up - subnet view is fine
+//   need to stop deleting of subnets when there are addresses
+
+
+
 var topologyTree
 var addressesGridDP,subnetsGridDP,topologyTreeDP;
 var onSubnetUpdate,onTreeUpdate;
@@ -33,7 +47,7 @@ function doOnLoad() {
 	topologyTree.setIconsPath('./javascripts/imgs/');
 	topologyTree.enableItemEditor(0);
 	topologyTree.loadXML('./addresses/tree.xml',function() {
-		// topologyTree.openAllItems(0);
+		topologyTree.selectItem('root 0',1,0);
 	});
 	topologyTree.attachEvent("onClearAll",treeToolbar.disableItem("delete"));
 	topologyTree.attachEvent("onSelect", function(node_id) {
@@ -129,6 +143,7 @@ function doOnLoad() {
 
 	subnetsGrid = subnetsTab.attachGrid();
 	showSubnetsGrid('root 0');
+	
 
 
 	contentTabbar.addTab('addressesTab','Addresses','110');
@@ -154,7 +169,7 @@ function doOnLoad() {
 	showAddressesGrid('root 0');
 
 	// addressesGrid.setIconsPath('./javascripts/imgs/');
-	// addressesGrid.enableMultiline(true);
+	// 
 // 
 	// addressesGrid.setHeader(["Network","Site","Subnet","Address","Mask","System","Associated URLs","Description"]);
 	// addressesGrid.setColTypes("ro,ro,ro,ed,ed,ed,txt,txt");
@@ -166,7 +181,7 @@ function doOnLoad() {
 	// addressesGrid.enableResizing('true,true,true,true,true,true,true,true');
 	// addressesGrid.enableTooltips('false,false,false,true,true,true,true,true');
 	// addressesGrid.setColSorting('str,str,str,str,str,str,str,str');
-	// addressesGrid.setInitWidths("100,100,100,100,60,100,150,*");
+	// addressesGrid.setInitWidths("100,100,100,100,80,100,150,*");
 	// addressesGrid.enableValidation(true, true);
 	// addressesGrid.setColValidators(',,,ValidIPv4,ValidInteger,,,');
 	// addressesGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='0' || cInd == '1' || cInd == '2') return false; else return true;});
@@ -261,7 +276,7 @@ function showAddressesGrid(node_id) {
 
 	if (node_id.split(" ")[0] == 'root') {
 		addressesGrid.setIconsPath('./javascripts/imgs/');
-		addressesGrid.enableMultiline(true);
+		
 		
 		addressesGrid.setHeader(["Address","Mask","System","Subnet","Associated URLs","Description","Site","Network"]);
 		addressesGrid.setColTypes("ed,ed,ed,ro,txt,txt,ro,ro");
@@ -273,18 +288,22 @@ function showAddressesGrid(node_id) {
 		addressesGrid.enableResizing('true,true,true,true,true,true,true,true');
 		addressesGrid.enableTooltips('true,true,true,true,true,true,true,true');
 		addressesGrid.setColSorting('str,str,str,str,str,str,str,str');
-		addressesGrid.setInitWidths("100,60,100,120,150,*,100,100");
+		addressesGrid.setInitWidths("100,80,100,120,150,150,100,100");
 		addressesGrid.enableValidation(true, true);
 		addressesGrid.setColValidators('ValidIPv4,ValidInteger,,,,,,');
 		// addressesGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='0' || cInd == '1' || cInd == '2') return false; else return true;});
 		addressesGrid.init();
-		addressesGrid.load('./addresses/view_all.xml', 'xml');
+		addressesGrid.load('./addresses/view_all.xml', function() {
+			addressesGrid.enableStableSorting(true);
+			addressesGrid.sortRows(1,"str","asc");
+			addressesGrid.selectRow(0,1,0,1);
+		});
 		
 		addressesGridDP = new dataProcessor("../addresses/dbaction_all.xml");
 	}
 	else if (node_id.split(" ")[0] == 'network') {
 		addressesGrid.setIconsPath('./javascripts/imgs/');
-		addressesGrid.enableMultiline(true);
+		
 		
 		addressesGrid.setHeader(["Address","Mask","System","Subnet","Associated URLs","Description","Site"]);
 		addressesGrid.setColTypes("ed,ed,ed,ro,txt,txt,ro");
@@ -296,18 +315,21 @@ function showAddressesGrid(node_id) {
 		addressesGrid.enableResizing('true,true,true,true,true,true,true');
 		addressesGrid.enableTooltips('true,true,true,true,true,true,true');
 		addressesGrid.setColSorting('str,str,str,str,str,str,str');
-		addressesGrid.setInitWidths("100,60,100,120,150,*,100");
+		addressesGrid.setInitWidths("100,80,100,120,150,150,100");
 		addressesGrid.enableValidation(true, true);
 		addressesGrid.setColValidators('ValidIPv4,ValidInteger,,,,,');
 		// addressesGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='0' || cInd == '1' || cInd == '2') return false; else return true;});
 		addressesGrid.init();
-		addressesGrid.load('./addresses/view_by_network.xml?id='+node_id, 'xml');
+		addressesGrid.load('./addresses/view_by_network.xml?id='+node_id, function() {
+			addressesGrid.enableStableSorting(true);
+			addressesGrid.sortRows(1,"str","asc");
+			addressesGrid.selectRow(0,1,0,1);
+		});
 		
 		addressesGridDP = new dataProcessor("../addresses/dbaction_network.xml?id="+node_id);
 	}
 	else if (node_id.split(" ")[0] == 'site') {
 		addressesGrid.setIconsPath('./javascripts/imgs/');
-		addressesGrid.enableMultiline(true);
 		
 		addressesGrid.setHeader(["Address","Mask","System","Subnet","Associated URLs","Description"]);
 		addressesGrid.setColTypes("ed,ed,ed,ro,txt,txt");
@@ -319,22 +341,25 @@ function showAddressesGrid(node_id) {
 		addressesGrid.enableResizing('true,true,true,true,true,true');
 		addressesGrid.enableTooltips('true,true,true,true,true,true');
 		addressesGrid.setColSorting('str,str,str,str,str,str');
-		addressesGrid.setInitWidths("100,60,100,120,150,*");
+		addressesGrid.setInitWidths("100,80,100,120,150,150");
 		addressesGrid.enableValidation(true, true);
 		addressesGrid.setColValidators('ValidIPv4,ValidInteger,,,,');
 		// addressesGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='0' || cInd == '1' || cInd == '2') return false; else return true;});
 		addressesGrid.init();
-		addressesGrid.load('./addresses/view_by_site.xml?id='+node_id, 'xml');
+		addressesGrid.load('./addresses/view_by_site.xml?id='+node_id, function() {
+			addressesGrid.enableStableSorting(true);
+			addressesGrid.sortRows(1,"str","asc");
+			addressesGrid.selectRow(0,1,0,1);
+		});
 		
 		addressesGridDP = new dataProcessor("../addresses/dbaction_site.xml?id="+node_id);
 	}
 	else if (node_id.split(" ")[0] == 'subnet') {
 		addressesGrid.setIconsPath('./javascripts/imgs/');
-		addressesGrid.enableMultiline(true);
 		
 		addressesGrid.setHeader(["Address","Mask","System","Associated URLs","Description"]);
 		addressesGrid.setColTypes("ed,ed,ed,txt,txt");
-		
+		// addressesGrid.enableEditTabOnly(1);
 		addressesGrid.attachHeader(["#text_filter","#select_filter","#text_filter","#text_filter","#text_filter"]);
 		addressesGrid.setColumnMinWidth('*,*,*,*,*');
 		addressesGrid.setColAlign('right,center,center,left,left');
@@ -342,15 +367,25 @@ function showAddressesGrid(node_id) {
 		addressesGrid.enableResizing('true,true,true,true,true');
 		addressesGrid.enableTooltips('true,true,true,true,true');
 		addressesGrid.setColSorting('str,str,str,str,str');
-		addressesGrid.setInitWidths("100,60,100,150,*");
+		addressesGrid.setInitWidths("100,80,100,150,150");
 		addressesGrid.enableValidation(true, true);
 		addressesGrid.setColValidators('ValidIPv4,ValidInteger,,,');
 		// addressesGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='0' || cInd == '1' || cInd == '2') return false; else return true;});
 		addressesGrid.init();
-		addressesGrid.load('./addresses/view_by_subnet.xml?id='+node_id, 'xml');
+		addressesGrid.load('./addresses/view_by_subnet.xml?id='+node_id, function() {
+			addressesGrid.enableStableSorting(true);
+			addressesGrid.sortRows(1,"str","asc");
+			addressesGrid.selectRow(0,1,0,1);
+		});
 		
 		addressesGridDP = new dataProcessor("../addresses/dbaction_subnet.xml?id="+node_id);
 	}
+	
+	// addressesGridDP.attachEvent("onAfterUpdate", function() {
+		// window.setTimeout( function() {
+			// addressesGrid.clearSelection();
+		// },1);
+	// });
 	
 	addressesGridDP.setUpdateMode("row");
 	addressesGridDP.init(addressesGrid);
@@ -365,10 +400,15 @@ function addressClearFilter() {
 }
 
 function addAddress() {
+	var newID = addressesGrid.uid();
+	
 	addressClearFilter();
-	addressesGrid.addRow(addressesGrid.uid(),['','','','',''],0);
-	addressesGrid.selectCell(0,0,false,true,true);
-	window.setTimeout( function() {
+	
+	addressesGrid.addRow(newID,",,,,",0);
+	addressesGrid.selectCell(addressesGrid.getRowIndex(newID),0,false,true,true);
+	addressesGrid.clearSelection();  // focus jumps out of the control after the first cell without this
+	window.setTimeout( function() {  // this wait is needed for the cell to actuall go into edit mode
+		addressesGrid.selectRow(0);
 		addressesGrid.editCell();
 	},1);
 }
@@ -396,17 +436,17 @@ function showSubnetsGrid(node_id) {
 	if (node_id.split(" ")[0] == 'root') {
 		subnetsGrid.setIconsPath('./javascripts/imgs/');
 		
-		subnetsGrid.setHeader(["Subnet","Mask","Subnet Name","Default Router","Description","Site","Network"]);
+		subnetsGrid.setHeader(["Subnet","Mask","Subnet Name","Gateway","Description","Site","Network"]);
 		subnetsGrid.setColTypes("ed,ed,ed,ed,txt,ro,ro");
 		
 		subnetsGrid.attachHeader(["#text_filter","#select_filter","#text_filter","#text_filter","#text_filter","#text_filter","#text_filter"]);
 		subnetsGrid.setColAlign('right,left,center,center,left,center,center');
 		subnetsGrid.enableTooltips('false,false,false,true,false,false,false');
 		subnetsGrid.setColSorting('str,str,str,str,str,str,str');
-		subnetsGrid.setInitWidths("100,60,120,100,*,100,100");
+		subnetsGrid.setInitWidths("100,80,120,100,150,100,100");
 		subnetsGrid.enableValidation(true, false);
 		subnetsGrid.setColValidators('ValidIPv4,ValidInteger,,ValidIPv4,,,');
-		subnetsGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='1') return false; else return true;});
+		// subnetsGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='1') return false; else return true;});
 		subnetsGrid.init();
 		subnetsGrid.load('./subnets/view_all.xml', 'xml');
 		
@@ -415,17 +455,17 @@ function showSubnetsGrid(node_id) {
 	else if (node_id.split(" ")[0] == 'network') {
 		subnetsGrid.setIconsPath('./javascripts/imgs/');
 		
-		subnetsGrid.setHeader(["Subnet","Mask","Subnet Name","Default Router","Description","Site"]);
+		subnetsGrid.setHeader(["Subnet","Mask","Subnet Name","Gateway","Description","Site"]);
 		subnetsGrid.setColTypes("ed,ed,ed,ed,txt,ro");
 		
 		subnetsGrid.attachHeader(["#text_filter","#select_filter","#text_filter","#text_filter","#text_filter","#text_filter"]);
 		subnetsGrid.setColAlign('right,left,center,center,left,center');
 		subnetsGrid.enableTooltips('false,false,false,true,false,false');
 		subnetsGrid.setColSorting('str,str,str,str,str,str');
-		subnetsGrid.setInitWidths("100,60,120,100,*,100");
+		subnetsGrid.setInitWidths("100,80,120,100,150,100");
 		subnetsGrid.enableValidation(true, false);
 		subnetsGrid.setColValidators('ValidIPv4,ValidInteger,,ValidIPv4,,');
-		subnetsGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='1') return false; else return true;});
+		// subnetsGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='1') return false; else return true;});
 		subnetsGrid.init();
 		subnetsGrid.load('./subnets/view_by_network.xml?id='+node_id, 'xml');
 		
@@ -434,17 +474,17 @@ function showSubnetsGrid(node_id) {
 	else if (node_id.split(" ")[0] == 'site') {
 		subnetsGrid.setIconsPath('./javascripts/imgs/');
 		
-		subnetsGrid.setHeader(["Subnet","Mask","Subnet Name","Default Router","Description"]);
+		subnetsGrid.setHeader(["Subnet","Mask","Subnet Name","Gateway","Description"]);
 		subnetsGrid.setColTypes("ed,ed,ed,ed,txt");
 		
 		subnetsGrid.attachHeader(["#text_filter","#select_filter","#text_filter","#text_filter","#text_filter"]);
 		subnetsGrid.setColAlign('right,left,center,center,left');
 		subnetsGrid.enableTooltips('false,false,false,true,false');
 		subnetsGrid.setColSorting('str,str,str,str,str');
-		subnetsGrid.setInitWidths("100,60,120,100,*");
+		subnetsGrid.setInitWidths("100,80,120,100,150");
 		subnetsGrid.enableValidation(true, false);
 		subnetsGrid.setColValidators('ValidIPv4,ValidInteger,,ValidIPv4,');
-		subnetsGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='1') return false; else return true;});
+		// subnetsGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='1') return false; else return true;});
 		
 		subnetsGrid.init();
 		subnetsGrid.load('./subnets/view_by_site.xml?id='+node_id, function() {
@@ -467,17 +507,17 @@ function showSubnetsGrid(node_id) {
 	else if (node_id.split(" ")[0] == 'subnet') {
 		subnetsGrid.setIconsPath('./javascripts/imgs/');
 		
-		subnetsGrid.setHeader(["Subnet","Mask","Subnet Name","Default Router","Description"]);
+		subnetsGrid.setHeader(["Subnet","Mask","Subnet Name","Gateway","Description"]);
 		subnetsGrid.setColTypes("ed,ed,ed,ed,txt");
 		
 		subnetsGrid.attachHeader(["#text_filter","#select_filter","#text_filter","#text_filter","#text_filter"]);
 		subnetsGrid.setColAlign('right,left,center,center,left');
 		subnetsGrid.enableTooltips('false,false,false,true,false');
 		subnetsGrid.setColSorting('str,str,str,str,str');
-		subnetsGrid.setInitWidths("100,60,120,100,*");
+		subnetsGrid.setInitWidths("100,80,120,100,150");
 		subnetsGrid.enableValidation(true, false);
 		subnetsGrid.setColValidators('ValidIPv4,ValidInteger,,ValidIPv4,');
-		subnetsGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='1') return false; else return true;});
+		// subnetsGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='1') return false; else return true;});
 		
 		subnetsGrid.init();
 		
@@ -487,7 +527,7 @@ function showSubnetsGrid(node_id) {
 			subnetsGrid.selectRow(0,1,0,1);
 		});
 		
-		subnetsGridDP = new dataProcessor("../subnets/dbaction_site.xml?id="+node_id);
+		subnetsGridDP = new dataProcessor("../subnets/dbaction_subnet.xml?id="+node_id);
 	}
 
 	onSubnetUpdate = subnetsGridDP.attachEvent("onAfterUpdate", function() {
@@ -509,13 +549,30 @@ function subnetClearFilter() {
 	subnetsGrid._f_rowsBuffer = null;
 }
 
+
+	var newID = addressesGrid.uid();
+	
+	addressClearFilter();
+	
+	addressesGrid.addRow(newID,",,,,",0);
+	addressesGrid.selectCell(addressesGrid.getRowIndex(newID),0,false,true,true);
+	addressesGrid.clearSelection();  // focus jumps out of the control after the first cell without this
+	window.setTimeout( function() {  // this wait is needed for the cell to actuall go into edit mode
+		addressesGrid.selectRow(0);
+		addressesGrid.editCell();
+	},1);
+
 function addSubnet() {
+	var newID = subnetsGrid.uid();
+	
 	subnetsGridDP.detachEvent(onSubnetUpdate);
 	
 	subnetClearFilter();
-	subnetsGrid.addRow(subnetsGrid.uid(),['','','','',''],0);
-	subnetsGrid.selectCell(0,0,false,true,true);
+	subnetsGrid.addRow(newID,",,,,",0);
+	subnetsGrid.selectCell(subnetsGrid.getRowIndex(newID),0,false,true,true);
+	subnetsGrid.clearSelection();
 	window.setTimeout( function() {
+		subnetsGrid.selectRow(subnetsGrid.getRowIndex(newID))
 		subnetsGrid.editCell();
 	},1);
 

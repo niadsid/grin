@@ -151,6 +151,37 @@ class SubnetsController < ApplicationController
             @tid = @id
     end 
   end
+  
+  # GET /subnets/dbaction_subnet.xml
+  def dbaction_subnet # supporting code for dhtmlx db/grid
+    #called for all db actions
+    subnet_identifier = params["c0"]
+    mask_length       = params["c1"]
+    subnet_name       = params["c2"]
+    default_router    = params["c3"]
+    description       = params["c4"]
+ 
+    @mode = params["!nativeeditor_status"]
+    
+    @id = params["gr_id"]
+    case @mode
+        when "deleted"
+            subnet=Subnet.find(@id)
+            subnet.destroy
+            
+            @tid = @id
+        when "updated"
+            subnet=Subnet.find(@id)
+            subnet.subnet_name        = subnet_name
+            subnet.subnet_identifier  = subnet_identifier
+            subnet.mask_length        = mask_length
+            subnet.default_router     = default_router
+            subnet.description        = description
+            subnet.save!
+            
+            @tid = @id
+    end 
+  end
 
   # GET /subnets
   # GET /subnets.xml

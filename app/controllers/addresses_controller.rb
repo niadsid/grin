@@ -244,8 +244,9 @@ class AddressesController < ApplicationController
 
   # GET /addresses/dbaction_subnet.xml
   def dbaction_subnet # supporting code for dhtmlx db/grid
-    #called for all db actions
-    subnet_id       = Subnet.first(:conditions => { :tree_id => @id }).id
+    
+    # right now this is only called when the Add Address button is clicked
+    subnet_id       = Subnet.first(:conditions => { :tree_id => params[:id] }).id
     network_address = params["c0"]
     mask_length     = params["c1"]
     system          = params["c2"]
