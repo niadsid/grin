@@ -87,8 +87,8 @@ function doOnLoad() {
 		}
 		else if (node_id.split(" ")[0] == 'subnet') {
 			addressesToolbar.enableItem("add");
-			subnetsToolbar.disableItem("add");
 			addressesToolbar.disableItem("delete");
+			subnetsToolbar.disableItem("add");
 			treeToolbar.disableItem("add");
 			treeToolbar.disableItem("delete");
 		}
@@ -167,26 +167,6 @@ function doOnLoad() {
 
 	addressesGrid = addressesTab.attachGrid();
 	showAddressesGrid('root 0');
-
-	// addressesGrid.setIconsPath('./javascripts/imgs/');
-	// 
-// 
-	// addressesGrid.setHeader(["Network","Site","Subnet","Address","Mask","System","Associated URLs","Description"]);
-	// addressesGrid.setColTypes("ro,ro,ro,ed,ed,ed,txt,txt");
-// 
-	// addressesGrid.attachHeader(["#text_filter","#text_filter","#text_filter","#text_filter","#select_filter","#text_filter","#text_filter","#text_filter"]);
-	// addressesGrid.setColumnMinWidth('*,*,*,*,*,*,*,*');
-	// addressesGrid.setColAlign('center,center,center,right,center,center,left,left');
-	// addressesGrid.setColVAlign('top,top,top,top,top,top,top,top');
-	// addressesGrid.enableResizing('true,true,true,true,true,true,true,true');
-	// addressesGrid.enableTooltips('false,false,false,true,true,true,true,true');
-	// addressesGrid.setColSorting('str,str,str,str,str,str,str,str');
-	// addressesGrid.setInitWidths("100,100,100,100,80,100,150,*");
-	// addressesGrid.enableValidation(true, true);
-	// addressesGrid.setColValidators(',,,ValidIPv4,ValidInteger,,,');
-	// addressesGrid.attachEvent('onEditCell', function(stage,rId,cInd,nValue,oValue){if(cInd=='0' || cInd == '1' || cInd == '2') return false; else return true;});
-	// addressesGrid.init();
-	// addressesGrid.load('./addresses/view_all.xml', 'xml');
 
 }
 
@@ -540,7 +520,7 @@ function showSubnetsGrid(node_id) {
 	subnetsGridDP.setUpdateMode("row");
 	subnetsGridDP.init(subnetsGrid);
 	onSubnetRowSelect = subnetsGrid.attachEvent("onRowSelect", function() {
-		subnetsToolbar.enableItem("delete");
+		if (addressesGrid.getRowsNum() == 0) subnetsToolbar.enableItem("delete");
 	});
 }
 
