@@ -1,27 +1,23 @@
 // Issue list:
-//	 deleting subnets when in the treeview that subnet is selected (when sites is selected it works ok)
-//   creating new subnets and addresses sucks because of tab order!
-//	 new input controls have resize tabs when they should not
 //	 need to be able to save the row without going to the next row
 //   spacing is too tight in tree, descenders are clipping
-//   grid items are not sorted on load
-//   for heading 2, sort direction controls don't appear consistently and are sometimes clipped
+//   for heading 2 kill the sort direction controls
 //   it would be nice to not have to reload from database when changing between view levels in the tree
-//   in address view the graphic is screwed up - subnet view is fine
-//   need to stop deleting of subnets when there are addresses
 
 
-
-var topologyTree
+var addressesTab,subnetsTab;
+var topologyTree;
 var addressesGridDP,subnetsGridDP,topologyTreeDP;
 var onSubnetUpdate,onTreeUpdate;
-var onAddressRowSelect,onSubnetRowSelect;
+var onAddressRowSelect,onSubnetRowSelect,onTopologyTreeSelect;
 var main_layout;
 var addressesGrid, subnetsGrid;
 var addressesToolbar,subnetsToolbar,treeToolbar;
 var node_id,new_node_id;
 
 function doOnLoad() {
+	node_id = 'root 0';
+	
 	dhtmlx.image_path='./javascripts/imgs/';
 
 	main_layout = new dhtmlXLayoutObject(document.body, '2U');
@@ -50,49 +46,7 @@ function doOnLoad() {
 		topologyTree.selectItem('root 0',1,0);
 	});
 	topologyTree.attachEvent("onClearAll",treeToolbar.disableItem("delete"));
-	topologyTree.attachEvent("onSelect", function(node_id) {
-		addressesGrid = addressesTab.attachGrid();
-		showAddressesGrid(node_id);
-		subnetsGrid = subnetsTab.attachGrid();
-		showSubnetsGrid(node_id);
-		if (node_id.split(" ")[0] == 'root') {
-			addressesToolbar.disableItem("add");
-			subnetsToolbar.disableItem("add");
-			addressesToolbar.disableItem("delete");
-			subnetsToolbar.disableItem("delete");
-			treeToolbar.enableItem("add");
-			treeToolbar.disableItem("delete");			
-		}
-		else if (node_id.split(" ")[0] == 'network') {
-			addressesToolbar.disableItem("add");
-			subnetsToolbar.disableItem("add");
-			addressesToolbar.disableItem("delete");
-			subnetsToolbar.disableItem("delete");
-			treeToolbar.enableItem("add");
-			if (topologyTree.hasChildren(node_id) == 0) {
-				treeToolbar.enableItem("delete");	
-			}
-			else treeToolbar.disableItem("delete");
-		}
-		else if (node_id.split(" ")[0] == 'site') {
-			addressesToolbar.disableItem("add");
-			subnetsToolbar.enableItem("add");
-			addressesToolbar.disableItem("delete");
-			subnetsToolbar.disableItem("delete");
-			treeToolbar.disableItem("add");
-			if (topologyTree.hasChildren(node_id) == 0) {
-				treeToolbar.enableItem("delete");	
-			}
-			else treeToolbar.disableItem("delete");
-		}
-		else if (node_id.split(" ")[0] == 'subnet') {
-			addressesToolbar.enableItem("add");
-			addressesToolbar.disableItem("delete");
-			subnetsToolbar.disableItem("add");
-			treeToolbar.disableItem("add");
-			treeToolbar.disableItem("delete");
-		}
-	});
+	attachTopologyTreeOnSelect(node_id);
 	topologyTree.attachEvent("onDblClick", function(node_id) {
 		if (node_id.split(" ")[0] == 'root') {
 			// Error event handler		
@@ -122,7 +76,7 @@ function doOnLoad() {
 	var b = main_layout.cells('b');
 	var contentTabbar = b.attachTabbar();
 	contentTabbar.addTab('subnetsTab','Subnets','90');
-	var subnetsTab = contentTabbar.cells('subnetsTab');
+	subnetsTab = contentTabbar.cells('subnetsTab');
 	contentTabbar.setTabActive('subnetsTab');
 	subnetsToolbar = subnetsTab.attachToolbar();
 	subnetsToolbar.setIconsPath('./javascripts/imgs/');
@@ -142,12 +96,12 @@ function doOnLoad() {
 	});
 
 	subnetsGrid = subnetsTab.attachGrid();
-	showSubnetsGrid('root 0');
+	showSubnetsGrid(node_id);
 	
 
 
 	contentTabbar.addTab('addressesTab','Addresses','110');
-	var addressesTab = contentTabbar.cells('addressesTab');
+	addressesTab = contentTabbar.cells('addressesTab');
 	addressesToolbar = addressesTab.attachToolbar();
 	addressesToolbar.setIconsPath('./javascripts/imgs/');
 	addressesToolbar.addButton("add", 1, "Add Address","","");
@@ -209,6 +163,7 @@ function addNode() {
 	
 	topologyTree.enableItemEditor(1);
 	topologyTreeDP.detachEvent(onTreeUpdate);
+	topologyTree.detachEvent(onTopologyTreeSelect);
 	
 	window.setTimeout( function() {
 		topologyTree.insertNewChild(node_id,new_node_id,'',0,0,0,0,'SELECT');
@@ -220,6 +175,7 @@ function addNode() {
 	},1);
 
 	window.setTimeout( function() {
+		attachTopologyTreeOnSelect(node_id);
 		onTreeUpdate = topologyTreeDP.attachEvent("onAfterUpdate", function() {
 			topologyTree.deleteChildItems(0);
 			topologyTree.loadXML('./addresses/tree.xml',function() {
@@ -241,6 +197,53 @@ function deleteNode() {
 	addressesToolbar.disableItem("delete");
 	subnetsToolbar.disableItem("add");
 	subnetsToolbar.disableItem("delete");
+}
+
+function attachTopologyTreeOnSelect(node_id) {
+	onTopologyTreeSelect = topologyTree.attachEvent("onSelect", function(node_id) {
+		addressesGrid = addressesTab.attachGrid();
+		showAddressesGrid(node_id);
+		subnetsGrid = subnetsTab.attachGrid();
+		showSubnetsGrid(node_id);
+
+		if (node_id.split(" ")[0] == 'root') {
+			addressesToolbar.disableItem("add");
+			subnetsToolbar.disableItem("add");
+			addressesToolbar.disableItem("delete");
+			subnetsToolbar.disableItem("delete");
+			treeToolbar.enableItem("add");
+			treeToolbar.disableItem("delete");			
+		}
+		else if (node_id.split(" ")[0] == 'network') {
+			addressesToolbar.disableItem("add");
+			subnetsToolbar.disableItem("add");
+			addressesToolbar.disableItem("delete");
+			subnetsToolbar.disableItem("delete");
+			treeToolbar.enableItem("add");
+			if (topologyTree.hasChildren(node_id) == 0) {
+				treeToolbar.enableItem("delete");	
+			}
+			else treeToolbar.disableItem("delete");
+		}
+		else if (node_id.split(" ")[0] == 'site') {
+			addressesToolbar.disableItem("add");
+			subnetsToolbar.enableItem("add");
+			addressesToolbar.disableItem("delete");
+			subnetsToolbar.disableItem("delete");
+			treeToolbar.disableItem("add");
+			if (topologyTree.hasChildren(node_id) == 0) {
+				treeToolbar.enableItem("delete");	
+			}
+			else treeToolbar.disableItem("delete");
+		}
+		else if (node_id.split(" ")[0] == 'subnet') {
+			addressesToolbar.enableItem("add");
+			addressesToolbar.disableItem("delete");
+			subnetsToolbar.disableItem("add");
+			treeToolbar.disableItem("add");
+			treeToolbar.disableItem("delete");
+		}
+	});
 }
 
 //

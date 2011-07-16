@@ -1,7 +1,8 @@
 xml.instruct! :xml, :version=>"1.0"
 
 xml.tag!("rows") do
-    @subnets.each do |subnet|
+    sorted_subnets = @subnets.sort_by { |i| i.subnet_identifier.downcase }
+	sorted_subnets.each do |subnet|
         xml.tag!("row",{ "id" => subnet.id }) do
             xml.tag!("cell", subnet.subnet_identifier)
 			xml.tag!("cell", subnet.mask_length)
