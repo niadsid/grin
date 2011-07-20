@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
       return "tablet_application" if agent.match(t)
     end
     MOBILE_BROWSERS.each do |m|
-      return "mobile_application" if agent.match(m)
+      return "phone_application" if agent.match(m)
     end
     # return "standard_application"
     return "standard_application"
