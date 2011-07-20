@@ -15,12 +15,9 @@
 		<link rel="apple-touch-icon" href="/images/run_button_57x57.png"/>
 		
 		<!-- startup image for web apps - iPhone - landscape (1024x748) -->
-		<link rel="apple-touch-startup-image" href="/images/ipad_loading.png" media="screen and (min-device-width: 1024px) and (max-device-width: 768px) and (orientation:landscape)" />
+		<link rel="apple-touch-startup-image" href="/images/iphone_loading.png" media="screen and (min-device-width: 480px) and (max-device-width: 960px) and (orientation:landscape)" />
 		<!-- startup image for web apps - iPhone - portrait (768x1024) -->
-		<link rel="apple-touch-startup-image" href="/images/ipad_loading.png" media="screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation:portrait)" />
-		
-		<meta name = "viewport" content = "width = device-width">
-		<meta name = "viewport" content = "height = device-height">
+		<link rel="apple-touch-startup-image" href="/images/iphone_loading.png" media="screen and (min-device-width: 320px) and (max-device-width: 640px) and (orientation:portrait)" />
 		
 		<style>
 			.listbox_top_left {
@@ -205,6 +202,8 @@
 			                            }
 								}]
 							},{
+								width: Ext.is.Phone ? undefined : 300,
+								height: 500,
 								xtype: 'list',
 								store: addressesListStore,
 								itemTpl: '<div class="listbox_top_left">{system_names}</div><div class="listbox_top_right">{network_address}</div><div class="listbox_bottom_left">{subnet_display_name}</div><div class="listbox_bottom_right">{system_interfaces}</div>',
@@ -270,6 +269,8 @@
 			                            }
 									}]
 								},{
+								width: Ext.is.Phone ? undefined : 300,
+								height: 500,
 								xtype: 'list',
 								store: subnetsListStore,
 								itemTpl: '<div class="listbox_top_left">{subnet_identifier_with_mask}</div><div class="listbox_top_right"></div><div class="listbox_bottom_left">{display_name}</div><div class="listbox_bottom_right">{subnet_name}</div>',
