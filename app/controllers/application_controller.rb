@@ -19,6 +19,6 @@ class ApplicationController < ActionController::Base
       return "mobile_application" if agent.match(m)
     end
     # return "standard_application"
-    return "mobile_application"
+    return "standard_application"
   end
 end
