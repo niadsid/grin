@@ -1,3 +1,5 @@
+# ENV["RAILS_ASSET_ID"] = ""
+
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'

@@ -292,9 +292,15 @@ class AddressesController < ApplicationController
   def index
     @addresses = Address.all
 
+    #render :json => Address.all.map{|a| {:system => a.system, :network_address => a.network_address} }
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @addresses }
+      format.json { render :json => @addresses.map{|a| {:system_names => a.system_names.join(" and "),
+                                                        :system_interfaces => a.system_interfaces.join(" and "),
+                                                        :network_address => a.network_address,
+                                                        :subnet_display_name => a.subnet.display_name,
+                                                        :location_name => a.location_name } } }
     end
   end
 

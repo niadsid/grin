@@ -29,9 +29,10 @@ class SubnetsController < ApplicationController
     #called for all db actions
     subnet_identifier = params["c0"]
     mask_length       = params["c1"]
-    subnet_name       = params["c2"]
-    default_router    = params["c3"]
-    description       = params["c4"]
+    display_name      = params["c2"]
+    subnet_name       = params["c3"]
+    default_router    = params["c4"]
+    description       = params["c5"]
  
     @mode = params["!nativeeditor_status"]
     
@@ -42,6 +43,7 @@ class SubnetsController < ApplicationController
             subnet.subnet_name        = subnet_name
             subnet.subnet_identifier  = subnet_identifier
             subnet.mask_length        = mask_length
+            subnet.display_name       = display_name
             subnet.default_router     = default_router
             subnet.description        = description
             subnet.save!
@@ -57,6 +59,7 @@ class SubnetsController < ApplicationController
             subnet.subnet_name        = subnet_name
             subnet.subnet_identifier  = subnet_identifier
             subnet.mask_length        = mask_length
+            subnet.display_name       = display_name
             subnet.default_router     = default_router
             subnet.description        = description
             subnet.save!
@@ -71,9 +74,10 @@ class SubnetsController < ApplicationController
     site_id           = params[:id].split[1]
     subnet_identifier = params["c0"]
     mask_length       = params["c1"]
-    subnet_name       = params["c2"]
-    default_router    = params["c3"]
-    description       = params["c4"]
+    display_name      = params["c2"]
+    subnet_name       = params["c3"]
+    default_router    = params["c4"]
+    description       = params["c5"]
  
     @mode = params["!nativeeditor_status"]
     
@@ -84,6 +88,7 @@ class SubnetsController < ApplicationController
             subnet.subnet_name        = subnet_name
             subnet.subnet_identifier  = subnet_identifier
             subnet.mask_length        = mask_length
+            subnet.display_name       = display_name
             subnet.default_router     = default_router
             subnet.description        = description
             subnet.save!
@@ -99,6 +104,7 @@ class SubnetsController < ApplicationController
             subnet.subnet_name        = subnet_name
             subnet.subnet_identifier  = subnet_identifier
             subnet.mask_length        = mask_length
+            subnet.display_name       = display_name
             subnet.default_router     = default_router
             subnet.description        = description
             subnet.save!
@@ -113,9 +119,10 @@ class SubnetsController < ApplicationController
     site_id           = Site.first(:conditions => { :tree_id => params[:id] }).id
     subnet_identifier = params["c0"]
     mask_length       = params["c1"]
-    subnet_name       = params["c2"]
-    default_router    = params["c3"]
-    description       = params["c4"]
+    display_name      = params["c2"]
+    subnet_name       = params["c3"]
+    default_router    = params["c4"]
+    description       = params["c5"]
  
     @mode = params["!nativeeditor_status"]
     
@@ -127,6 +134,7 @@ class SubnetsController < ApplicationController
             subnet.subnet_name        = subnet_name
             subnet.subnet_identifier  = subnet_identifier
             subnet.mask_length        = mask_length
+            subnet.display_name       = display_name
             subnet.default_router     = default_router
             subnet.description        = description
             subnet.tree_id            = "subnet 1" + Random.rand(999999999).to_s
@@ -144,6 +152,7 @@ class SubnetsController < ApplicationController
             subnet.subnet_name        = subnet_name
             subnet.subnet_identifier  = subnet_identifier
             subnet.mask_length        = mask_length
+            subnet.display_name       = display_name
             subnet.default_router     = default_router
             subnet.description        = description
             subnet.save!
@@ -157,9 +166,10 @@ class SubnetsController < ApplicationController
     #called for all db actions
     subnet_identifier = params["c0"]
     mask_length       = params["c1"]
-    subnet_name       = params["c2"]
-    default_router    = params["c3"]
-    description       = params["c4"]
+    display_name      = params["c2"]
+    subnet_name       = params["c3"]
+    default_router    = params["c4"]
+    description       = params["c5"]
  
     @mode = params["!nativeeditor_status"]
     
@@ -175,6 +185,7 @@ class SubnetsController < ApplicationController
             subnet.subnet_name        = subnet_name
             subnet.subnet_identifier  = subnet_identifier
             subnet.mask_length        = mask_length
+            subnet.display_name       = display_name
             subnet.default_router     = default_router
             subnet.description        = description
             subnet.save!
@@ -191,6 +202,10 @@ class SubnetsController < ApplicationController
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @subnets }
+      format.json { render :json => @subnets.map{|a| {:subnet_identifier_with_mask => a.subnet_identifier_with_mask,
+                                                      :subnet_name => a.subnet_name,
+                                                      :display_name => a.display_name,
+                                                      :location_name => a.location_name } } }
     end
   end
 

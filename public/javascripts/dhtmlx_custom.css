@@ -1,6 +1,9 @@
 /*****************************************************************************************************************************************************************
 								"DHX_SKYBLUE" SKIN
 *****************************************************************************************************************************************************************/
+
+
+
 body{
 	background-color: #dbe5f1;
 }
@@ -400,20 +403,21 @@ div.gridbox .objbox {
 	background-color: #ffffff;
 }
 .dhx_tree_textSign{
-   color:244061;
+   color:#244061;
 }
 .dhxtree_dhx_black, .dhxtree_dhx_skyblue{
 	background: #ffffff;
-	color:244061;
+	color:#244061;
 }
 
-.dhxtree_dhx_skyblue .selectedTreeRow{
+/*.dhxtree_dhx_skyblue .selectedTreeRow{
 	background-color:white;
 	background-image:url("./imgs/grid/sky_blue_sel18.png");
 	border-right:1px solid #ffc341;
 	border-left: 1px solid #ffc341;
-	color:244061;
-}
+	color:#244061;
+}*/
+
 .dhtmlx_skin_dhx_skyblue div.dhtmlx_window_active div.dhtmlx_wins_body_outer {
 	background-color: #8db3e2;
 	background-image: url("./imgs/dhxwins_dhx_skyblue/active/header_bg.gif");
@@ -759,14 +763,14 @@ div.gridbox table.obj td.group_row {
 	font-weight: normal;
 	font-style: normal;
 }
-.dhxtree_dhx_skyblue .selectedTreeRow_lor, .dhxtree_dhx_skyblue .selectedTreeRow{
+/*.dhxtree_dhx_skyblue .selectedTreeRow_lor, .dhxtree_dhx_skyblue .selectedTreeRow{
 	font-family: arial;
 	font-size: 12px !important;
 	color: #244061;
 	font-weight: normal;
 	font-style: normal;
 	border: 1px solid #ffc341;
-}
+}*/
 
 .dhx_tab_element{
 	font-family: arial;
@@ -1239,4 +1243,51 @@ input.dhtmlx_validation_error, select.dhtmlx_validation_error {
 	color: #0f243e;
 	font-weight: bold;
 	font-style: normal;
+}
+
+/* my add */
+
+.dhxtree_dhx_skyblue .standartTreeRow{
+	font-family: arial;
+	font-size: 12px !important;
+	color: #244061;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.dhxtree_dhx_skyblue .selectedTreeRow{
+	background-color:#ffc341;
+	background-image:url("./imgs/grid/sky_blue_sel18.png");
+	border:1px solid #ffc341;
+	color:000000;
+}
+
+.dhxtree_dhx_skyblue .selectedTreeRow_lor, .dhxtree_dhx_skyblue .selectedTreeRow{
+	background-image:url("./imgs/grid/sky_blue_sel18.png");
+	font-family: arial;
+	font-size: 12px !important;
+	color: #244061;
+	font-weight: normal;
+	font-style: normal;
+	border: 1px solid #ffc341;
+}
+
+.dhxtree_dhx_skyblue .standartTreeRow_lor{
+	font-family: arial;
+	font-size: 12px !important;
+	color: #244061;
+	font-weight: normal;
+	font-style: normal;
+}
+
+body:nth-of-type(1) .dhxtree_dhx_skyblue span.selectedTreeRow, body:nth-of-type(1) .dhxtree_dhx_skyblue span.selectedTreeRow_lor {
+	padding: 1px 0 1px 0;
+	display: inline-block;
+	padding-top: 0;
+	height: 17px;
+}
+
+body:nth-of-type(1) .dhxtree_dhx_skyblue span.standartTreeRow, body:nth-of-type(1) .dhxtree_dhx_skyblue span.standartTreeRow_lor {
+	display: inline-block;
+	height: 17px;
 }

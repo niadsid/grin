@@ -6,6 +6,7 @@ xml.tag!("rows") do
         xml.tag!("row",{ "id" => subnet.id }) do
             xml.tag!("cell", subnet.subnet_identifier)
 			xml.tag!("cell", subnet.mask_length)
+			xml.tag!("cell", subnet.display_name)
 			xml.tag!("cell", subnet.subnet_name)
 			xml.tag!("cell", subnet.default_router)
             xml.tag!("cell", subnet.description)

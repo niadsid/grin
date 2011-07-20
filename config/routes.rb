@@ -2,6 +2,7 @@ Grin::Application.routes.draw do
 
   root :to => "pages#home"
   
+  match 'addresses/index', :to => 'addresses#index'
   match 'addresses/view_all', :to => 'addresses#view_all'
   match 'addresses/view_by_network', :to => 'addresses#view_by_network'
   match 'addresses/view_by_site', :to => 'addresses#view_by_site'
@@ -12,7 +13,8 @@ Grin::Application.routes.draw do
   match 'addresses/dbaction_network', :to => 'addresses#dbaction_network'
   match 'addresses/dbaction_site', :to => 'addresses#dbaction_site'
   match 'addresses/dbaction_subnet', :to => 'addresses#dbaction_subnet'
-  
+
+  match 'subnets/index', :to => 'subnets#index'
   match 'subnets/view_all', :to => 'subnets#view_all'
   match 'subnets/view_by_network', :to => 'subnets#view_by_network'
   match 'subnets/view_by_site', :to => 'subnets#view_by_site'
@@ -21,6 +23,8 @@ Grin::Application.routes.draw do
   match 'subnets/dbaction_network', :to => 'subnets#dbaction_network'
   match 'subnets/dbaction_site', :to => 'subnets#dbaction_site'
   match 'subnets/dbaction_subnet', :to => 'subnets#dbaction_subnet'
+  
+  
 
   resources :translations
 
@@ -31,6 +35,10 @@ Grin::Application.routes.draw do
   resources :sites
 
   resources :networks
+  
+
+  
+  match "/app.manifest" => Rails::Offline
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

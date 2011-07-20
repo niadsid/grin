@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110711210924) do
+ActiveRecord::Schema.define(:version => 20110718232437) do
 
   create_table "addresses", :force => true do |t|
     t.string   "network_address"
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(:version => 20110711210924) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "tree_id"
+    t.string   "display_name"
   end
 
   create_table "translations", :force => true do |t|

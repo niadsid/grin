@@ -5,6 +5,14 @@ class Subnet < ActiveRecord::Base
   has_many :addresses
 
   def friendly_descriptor
-    self.subnet_name + ' (' + self.subnet_identifier + '/' + self.mask_length + ')'
+    self.display_name + ' (' + self.subnet_identifier + '/' + self.mask_length + ')'
+  end
+  
+  def location_name
+    self.site.network.network_name + " - " + self.site.site_name
+  end
+  
+  def subnet_identifier_with_mask
+    self.subnet_identifier + '/' + self.mask_length
   end
 end
