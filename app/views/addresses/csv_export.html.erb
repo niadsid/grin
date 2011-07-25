@@ -1,0 +1,5 @@
+ <%= form_for @address do |f| %>
+ 	<%= f.label "Select a CSV File:" %>
+ 	<%= f.file_field :file %><br />
+ 	<%= f.submit %>
+ <% end %>

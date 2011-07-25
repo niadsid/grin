@@ -1,4 +1,154 @@
 class AddressesController < ApplicationController
+  require 'csv'
+
+  def clear_database
+    Address.delete_all
+    Subnet.delete_all
+    Site.delete_all
+    Network.delete_all
+    
+    redirect_to :back
+  end 
+  
+  def import_csv 
+
+    CSV.foreach("/home/dev/Dropbox/Run/Development/Grin/"+params[:filename], :headers => true) do |row|
+
+      if !Network.first(:conditions => { :network_name => row[0] }).nil?
+        network_id = Network.first(:conditions => { :network_name => row[0] }).id
+      else
+        network_id = 0
+      end
+
+      if network_id.zero?
+#       This network doesn't exist: create it
+        network = Network.new
+        network.network_name  = row[0]
+        network.tree_id       = "network 1" + Random.rand(999999999).to_s
+        network.save!
+        
+        network_id = network.id
+        site_id = 0
+      else
+        if !Site.first(:conditions => { :site_name => row[1], :network_id => network_id }).nil?
+          site_id = Site.first(:conditions => { :site_name => row[1], :network_id => network_id }).id
+        else
+          site_id=0
+        end
+      end
+
+      if site_id.zero?
+#       create new site
+        site                  = Site.new
+        site.network_id       = network_id
+        site.site_name        = row[1]
+        site.tree_id          = "site 1" + Random.rand(999999999).to_s
+        site.save!
+  
+        site_id = site.id
+        subnet_id = 0
+      else
+        if !Subnet.first(:conditions => { :subnet_name => row[2], :site_id => site_id }).nil?
+          subnet_id = Subnet.first(:conditions => { :subnet_name => row[2], :site_id => site_id }).id
+        else
+          subnet_id = 0
+        end
+      end
+
+      if subnet_id.zero?
+#       create new subnet
+        subnet = Subnet.new
+        subnet.site_id            = site_id
+        subnet.display_name       = row[2]
+        subnet.subnet_identifier  = row[3]
+        subnet.mask_length        = row[4]
+        subnet.subnet_name        = row[5]
+        subnet.default_router     = row[6]
+        subnet.description        = row[7]
+        subnet.tree_id            = "subnet 1" + Random.rand(999999999).to_s
+        subnet.save!
+        
+        subnet_id = subnet.id
+      end
+
+      if Address.first(:conditions => { :network_address => row[8], :subnet_id => subnet_id }).nil?
+        address=Address.new
+        address.subnet_id       = subnet_id
+        address.network_address = row[8]
+        address.mask_length     = row[9]
+        address.address_type    = row[10]
+        address.system          = row[11]
+        address.interface       = row[12]
+        address.url             = row[13]
+        address.description     = row[14]
+        address.save!
+      end
+    end
+    flash.now[:message]="CSV Import Successful, new records added to data base"
+  end
+
+  def export_csv
+    tree_id       = params[:id]
+    
+    if (tree_id.split[0] == 'root')
+      @addresses = Address.all
+      filename = "#{Time.now.strftime("%Y%m%d")} Grin database backup.csv"
+    elsif (tree_id.split[0] == 'network')
+      network_id = Network.first(:conditions => { :tree_id => tree_id }).id
+      @addresses = Address.where(:subnet_id => Subnet.where(:site_id => Site.where(:network_id => network_id)))
+      filename = "#{Time.now.strftime("%Y%m%d")} " + Network.find(network_id).network_name + ".csv"
+    elsif (tree_id.split[0] == 'site')
+      site_id       = Site.first(:conditions => { :tree_id => params[:id] }).id
+      @addresses = Address.where(:subnet_id => Subnet.where(:site_id => site_id))
+      filename = "#{Time.now.strftime("%Y%m%d")} " + Site.find(site_id).site_name + ".csv"
+    elsif (tree_id.split[0] == 'subnet')
+      subnet_id     = Subnet.first(:conditions => { :tree_id => params[:id] }).id
+      @addresses = Address.where(:subnet_id => subnet_id)
+      filename = "#{Time.now.strftime("%Y%m%d")} " + Subnet.find(subnet_id).display_name + ".csv"
+    end
+
+    csv_string = CSV.generate do |csv|
+      csv << ["Network Name",
+              "Site Name",
+              "Subnet Display Name",
+              "Subnet Identifier",
+              "Subnet Mask Length",
+              "Subnet Name",
+              "Subnet Default Router",
+              "Subnet Description",
+              "Network Address",
+              "Mask Length",
+              "Address Type",
+              "System",
+              "Interface",
+              "url",
+              "Description"]
+      @addresses.each do |address|  
+        csv <<  [address.subnet.site.network.network_name,
+            address.subnet.site.site_name,
+            address.subnet.display_name,
+            address.subnet.subnet_identifier,
+            address.subnet.mask_length,
+            address.subnet.subnet_name,
+            address.subnet.default_router,
+            address.subnet.description,
+            address.network_address,
+            address.mask_length,
+            address.address_type,
+            address.system,
+            address.interface,
+            address.url,
+            address.description]
+      end
+    end
+
+    send_data csv_string, :type => "text/plain",
+        :filename => filename,
+        :disposition => 'attachment'
+    redirect_to root path
+  end
+  
+  
   # GET /addresses/tree.xml
   def tree
     @networks = Network.all
@@ -98,7 +248,7 @@ class AddressesController < ApplicationController
 
   # GET /addresses/view_by_network.xml
   def view_by_network
-    network_id    = Network.first(:conditions => { :tree_id => params[:id] }).id
+    network_id = Network.first(:conditions => { :tree_id => params[:id] }).id
 
     @addresses = Address.where(:subnet_id => Subnet.where(:site_id => Site.where(:network_id => network_id)))
   end

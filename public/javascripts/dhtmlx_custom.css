@@ -8,7 +8,7 @@ body{
 	background-color: #dbe5f1;
 }
 
-244061le.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxWindowMainContent {
+table.dhtmlxLayoutPolyContainer_dhx_skyblue td.dhtmlxLayoutSinglePoly div.dhtmlxWindowMainContent {
 	border: #365f91 1px solid;
 }
 
@@ -1247,6 +1247,15 @@ input.dhtmlx_validation_error, select.dhtmlx_validation_error {
 
 /* my add */
 
+.dhx_toolbar_base_dhx_skyblue div.dhx_toolbar_btn div {
+	float: left;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	margin: 0px 2px 0px 2px;
+	height: 16px;
+	-moz-user-select: none;
+}
+
 .dhxtree_dhx_skyblue .standartTreeRow{
 	font-family: arial;
 	font-size: 12px !important;
@@ -1291,3 +1300,27 @@ body:nth-of-type(1) .dhxtree_dhx_skyblue span.standartTreeRow, body:nth-of-type(
 	display: inline-block;
 	height: 17px;
 }
+
+/* This scetion hides the file input button over a DHTMLX button - begin */
+div.fileinputs {
+	position: relative;
+	width: 96px;
+}
+
+div.fakefile {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+}
+
+input.file {
+	position: relative;
+	width: 96px;
+	text-align: left;
+	-moz-opacity:0 ;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 2;
+}
+/* This scetion hides the file input button over a DHTMLX button - end */

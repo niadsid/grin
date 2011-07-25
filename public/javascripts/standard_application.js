@@ -31,13 +31,17 @@ function doOnLoad() {
 	
 	treeToolbar.addButton("add", 1, "Add","","");
 	treeToolbar.addButton("delete", 2, "Delete","","");
+	treeToolbar.addButton("clear", 3, "Clear Database","","");
 	treeToolbar.disableItem("add");
 	treeToolbar.disableItem("delete");
+	treeToolbar.enableItem("clear");
 	treeToolbar.attachEvent("onClick", function(id) {
 		if (id == "add")
 			addNode();
-		else
+		else if (id == "delete")
 			deleteNode();
+		else if (id == "clear")
+			clearDatabase();
 	});
 	
 	topologyTree = a.attachTree();
@@ -83,12 +87,8 @@ function doOnLoad() {
 	subnetsToolbar.setIconsPath('./javascripts/imgs/');
 	subnetsToolbar.addButton("add", 1, "Add Subnet","","");
 	subnetsToolbar.addButton("delete", 2, "Delete Subnet","","");
-	subnetsToolbar.addButton("export_to_excel", 3, "Export to Excel","","");
-	subnetsToolbar.addButton("export_to_text", 4, "Export to Text","","");
 	subnetsToolbar.disableItem("add");
 	subnetsToolbar.disableItem("delete");
-	subnetsToolbar.disableItem("export_to_excel");
-	subnetsToolbar.disableItem("export_to_text");
 	subnetsToolbar.attachEvent("onClick", function(id) {
 		if (id == "add")
 			addSubnet();
@@ -98,8 +98,6 @@ function doOnLoad() {
 
 	subnetsGrid = subnetsTab.attachGrid();
 	showSubnetsGrid(node_id);
-	
-
 
 	contentTabbar.addTab('addressesTab','Addresses','110');
 	addressesTab = contentTabbar.cells('addressesTab');
@@ -107,17 +105,26 @@ function doOnLoad() {
 	addressesToolbar.setIconsPath('./javascripts/imgs/');
 	addressesToolbar.addButton("add", 1, "Add Address","","");
 	addressesToolbar.addButton("delete", 2, "Delete Address","","");
-	addressesToolbar.addButton("export_to_excel", 3, "Export to Excel","","");
-	addressesToolbar.addButton("export_to_text", 4, "Export to Text","","");
+	addressesToolbar.addSeparator("separator1",3);
+	addressesToolbar.addButton("export_to_csv", 4, "Export to CSV","","");
+	addressesToolbar.addButton("export_to_text", 5, "Export to Text","","");
+	addressesToolbar.addSeparator("separator2",6);
+	addressesToolbar.addButton("import_csv", 7, '<div class = "fileinputs"><input class="file" type="file" onChange="importCSV(this.files)"/><div class="fakefile">Import New Data</div></div>',"","");
 	addressesToolbar.disableItem("add");
 	addressesToolbar.disableItem("delete");
-	addressesToolbar.disableItem("export_to_excel");
-	addressesToolbar.disableItem("export_to_text");
+	addressesToolbar.enableItem("export_to_csv");
+	addressesToolbar.enableItem("export_to_text");
+	addressesToolbar.enableItem("import_csv");
+	
 	addressesToolbar.attachEvent("onClick", function(id) {
 		if (id == "add")
 			addAddress();
 		else if (id == "delete")
 			deleteAddress();
+		else if (id == "export_to_csv")
+			exportToCSV();
+		else if (id == "export_to_text")
+			exportToText();
 	});
 
 	addressesGrid = addressesTab.attachGrid();
@@ -247,13 +254,128 @@ function attachTopologyTreeOnSelect(node_id) {
 	});
 }
 
+function clearDatabase() {
+	location.href = "./addresses/clear_database";
+}
+
+function exportToCSV() {
+	node_id = topologyTree.getSelectedItemId();
+	location.href = "./addresses/export_csv?id="+node_id;
+}
+
+function exportToText() {
+	alert('Address to Text');
+}
+
+function importCSV(uploadFiles) {
+	
+	if(uploadFiles) {
+		alert('ok that worked');
+		
+		
+		var fr = new FileReader();
+		fr.onload = function(e) {
+			
+			
+			var csvText = e.target.result; // from: http://www.cparker15.com/utilities/csv-to-json/
+			var jsonText = "";
+			var line = [];
+			var row = [];
+			var normalized_row = [];
+			
+			if (csvText != "") { // Need to have a header row
+				row = csvText.split(/[\r\n]|\n/g);
+				
+				// get rid of empty rows
+				for (var i = 0; i < row.length; i++)
+				{
+					if (row[i].replace(/^[\s]*|[\s]*$/g, '') == "")
+					{
+						row.splice(i, 1);
+						i--;
+					}
+				}
+				
+				if (row.length > 1) { // Need to have a header row
+					
+					normalized_row = [];
+					
+					for (var k = 0; k < row.length; k++) {
+						
+						line = row[k].split(',');
+	
+						// check for splits performed inside quoted strings and correct if needed
+						for (var i = 0; i < line.length; i++)
+						{
+							var chunk = line[i].replace(/^[\s]*|[\s]*$/g, "");
+							var quote = "";
+							if (chunk.charAt(0) == '"' || chunk.charAt(0) == "'") quote = chunk.charAt(0);
+							if (quote != "" && chunk.charAt(chunk.length - 1) == quote) quote = "";
+						
+							if (quote != "")
+							{
+								var j = i + 1;
+								
+								if (j < line.length) chunk = line[j].replace(/^[\s]*|[\s]*$/g, "");
+							
+								while (j < line.length && chunk.charAt(chunk.length - 1) != quote)
+								{
+									line[i] += ',' + line[j];
+									line.splice(j, 1);
+									chunk = line[j].replace(/[\s]*$/g, "");
+								}
+								
+								if (j < line.length)
+								{
+									line[i] += ',' + line[j];
+									line.splice(j, 1);
+								}
+							}
+						}
+					
+						for (var i = 0; i < line.length; i++)
+						{
+							// remove leading/trailing whitespace
+							line[i] = line[i].replace(/^[\s]*|[\s]*$/g, "");
+							
+							// remove leading/trailing quotes
+							if (line[i].charAt(0) == '"') line[i] = line[i].replace(/^"|"$/g, "");
+							else if (line[i].charAt(0) == "'") line[i] = line[i].replace(/^'|'$/g, "");
+						}
+						
+						row[k] = line;
+						
+					}
+					for (var i = 1; i < row.length; i++) {
+						if (row[i].length > 0) normalized_row.push({});
+				
+						for (var j = 0; j < row[i].length; j++) {
+							normalized_row[i - 1][row[0][j]] = row[i][j];
+						}
+					}
+					jsonText = JSON.stringify(normalized_row, null, "\t");
+					localStorage.setItem("test",jsonText);
+				}
+				
+				alert(jsonText);
+			}
+			 
+		};
+		fr.readAsText(uploadFiles[0]);
+		
+		
+		alert(uploadFiles[0].name+" Done!");
+	}
+	
+}
+
+
 //
 //	addressesGrid
 //
 
 function exploreAddressesNode(node_id) {
-	topologyTree.openItem(node_id);
-	showAddressesGrid(node_id);
+	document.getElementById("file1")
 	alert('hey');
 }
 function showAddressesGrid(node_id) {

@@ -1,0 +1,10 @@
+<% form_tag addresses_import_csv_path, {:multipart=>true, :method => :post} do %>  
+  <p>
+      <%= label_tag :filename, 'Upload your file.' %><br />
+      <%= file_field_tag :filename %>
+  </p>
+  <p>
+  	<%= submit_tag 'Submit' %>
+  </p>
+
+<% end %>

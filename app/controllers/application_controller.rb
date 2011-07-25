@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   layout :detect_browser
 
-  private
+private
   TABLET_BROWSERS = ["ipad"]
   MOBILE_BROWSERS = ["android", "ipod", "opera mini", "blackberry", "palm","hiptop","avantgo","plucker", "xiino",
                      "blazer","elaine", "windows ce; ppc;", "windows ce; smartphone;","windows ce; iemobile",
@@ -21,4 +21,5 @@ class ApplicationController < ActionController::Base
     # return "standard_application"
     return "standard_application"
   end
+  
 end

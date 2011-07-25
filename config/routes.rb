@@ -2,6 +2,11 @@ Grin::Application.routes.draw do
 
   root :to => "pages#home"
   
+  match 'pages/issues', :to => 'pages#issues'
+
+  match 'addresses/clear_database', :to => 'addresses#clear_database'
+  match 'addresses/import_csv', :to => 'addresses#import_csv'
+  match 'addresses/export_csv', :to => 'addresses#export_csv'
   match 'addresses/index', :to => 'addresses#index'
   match 'addresses/view_all', :to => 'addresses#view_all'
   match 'addresses/view_by_network', :to => 'addresses#view_by_network'
@@ -24,8 +29,6 @@ Grin::Application.routes.draw do
   match 'subnets/dbaction_site', :to => 'subnets#dbaction_site'
   match 'subnets/dbaction_subnet', :to => 'subnets#dbaction_subnet'
   
-  
-
   resources :translations
 
   resources :addresses
