@@ -779,7 +779,7 @@ var Addresses = {
 		var i,key;
 		var node_index = 0;
 
-		records[node_index] = new Array("Subnet Identifier", "Subnet Mask Length", "Subnet name", "Subnet Default Router", "Subnet Description", "Network Address", "Mask Length", "System", "URL", "Description");
+		records[node_index] = new Array("Network Name", "Site Name", "Subnet Identifier", "Subnet Mask Length", "Subnet name", "Subnet Default Router", "Subnet Description", "Network Address", "Mask Length", "System", "URL", "Description");
 		node_index++;
 
 		if (node_id == 'root:0') {
