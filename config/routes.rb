@@ -14,6 +14,8 @@ Grin::Application.routes.draw do
   match 'addresses/view_by_subnet', :to => 'addresses#view_by_subnet'
   match 'addresses/tree', :to => 'addresses#tree'
   match 'addresses/dbaction_tree', :to => 'addresses#dbaction_tree'
+  match 'addresses/dbaction_tree_null', :to => 'addresses#dbaction_tree_null'
+  match 'addresses/dbaction_grid_null', :to => 'addresses#dbaction_grid_null'
   match 'addresses/dbaction_all', :to => 'addresses#dbaction_all'
   match 'addresses/dbaction_network', :to => 'addresses#dbaction_network'
   match 'addresses/dbaction_site', :to => 'addresses#dbaction_site'

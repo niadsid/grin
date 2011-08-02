@@ -145,13 +145,21 @@ class AddressesController < ApplicationController
     send_data csv_string, :type => "text/plain",
         :filename => filename,
         :disposition => 'attachment'
-    redirect_to root path
+    # redirect_to root_path
   end
   
   
   # GET /addresses/tree.xml
   def tree
     @networks = Network.all
+  end
+
+  def dbaction_tree_null
+    # this is just a blank action so I can use the treeview control
+    @mode         = params["!nativeeditor_status"]
+    @id           = params["tr_id"]
+    @parent_id    = params["tr_pid"]
+    @tid          = params["tr_id"]
   end
 
   # GET /addresses/dbaction_tree.xml
@@ -266,6 +274,13 @@ class AddressesController < ApplicationController
     
     @addresses = Address.where(:subnet_id => subnet_id)
   end
+
+  def dbaction_grid_null
+    # this is just a blank action so I can use the treeview control
+    @mode         = params["!nativeeditor_status"]
+    @tid          = params["gr_id"]
+  end
+
 
   # GET /addresses/dbaction_all.xml
   def dbaction_all # supporting code for dhtmlx db/grid
